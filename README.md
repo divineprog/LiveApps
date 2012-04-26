@@ -1,4 +1,4 @@
 LiveApps
 ========
 
-Experiments with live coding of mobile apps
+Experiments with live coding of mobile apps.
