@@ -1,3 +1,9 @@
+
+// From: github.com/remy/jsconsole
+// javascript:(function(s){s.src='http://jsconsole.com/inject.js';document.body.appendChild(s)})(document.createElement('script'))
+
+// duckduckgo.com
+
 var HTTP = require('http')
 var URL = require('url')
 var NET = require('net')
