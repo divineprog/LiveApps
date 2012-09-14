@@ -10,6 +10,7 @@ var NET = require('net')
 var FS = require('fs')
 var OS = require('os')
 var PATH = require('path')
+var DNS = require('dns')
 
 // Mime type table.
 var MimeTypes = GetDefaultMimeTypes()
@@ -143,6 +144,10 @@ function HandleCommandRequest(request, response)
   }
 
   response.writeHead(200, {})
+  response.write(
+    '<html><body><p>BasePath: ' +
+    BasePath +
+    '</p></body></html>')
   response.end()
 }
 
@@ -161,15 +166,30 @@ function WriteResponse(response, data)
   response.end()
 }
 
+/**
+ * Get the public IP-address for the machine.
+ * @param fun Function f(error, address, family)
+ * Thanks to nodyou: http://stackoverflow.com/a/8440736/1285614
+ */
+function GetIP(fun)
+{
+  DNS.lookup(OS.hostname(), fun)
+}
+
 // Create and start the HTTP file server.
 var server = HTTP.createServer(HandleFileRequest)
 server.listen(4042)
-console.log('File server running at http://127.0.0.1:4042/')
+GetIP(function (err, add, fam) {
+  console.log('File server running at http://' + add + ':4042/')
+})
 
 // Create and start the command server.
 var server = HTTP.createServer(HandleCommandRequest)
 server.listen(4043)
-console.log('Command server running at http://127.0.0.1:4043/')
+GetIP(function (err, add, fam) {
+  console.log('Command server running at http://' + add + ':4043/')
+  console.log('Change BasePath using http://' + add + ':4043/BasePath/NewPath')
+})
 
 function GetDefaultMimeTypes()
 {
